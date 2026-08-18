@@ -1,0 +1,414 @@
+﻿:root {
+    --pink: #f06292;
+    --pink-hover: #ec407a;
+    --pink-active: #d81b60;
+    --grey: #6c757d;
+    --white: #ffffff;
+    --bg: #f5f5f5; /* This is the bg-light Bootstrap color */
+    --dark: #212529;
+}
+
+.dropdown-menu {
+    --bs-dropdown-link-active-bg: var(--pink);
+}
+
+html {
+    scroll-behavior: auto !important;
+}
+
+hr {
+    margin: 0;
+    padding: 0;
+    padding-bottom: 5px;
+}
+
+.navbar-shadow {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.125);
+}
+
+/**************************************/
+/* General Styling */
+/**************************************/
+
+body {
+    background-color: var(--bg);
+    min-height: 100vh;
+    min-width: 565px;
+}
+
+.bg-light {
+    background-color: var(--bg);
+}
+
+h3 {
+    color: var(--pink);
+    font-size: 24px;
+}
+
+.forgot-password-link,
+.terms-conditions-link {
+    color: var(--pink) !important; /* Red text */
+}
+
+@media (max-width: 992px) {
+    .auth-container {
+        min-height: 100vh;
+        padding: 100px 0px;
+    }
+
+    .action-buttons {
+        float: left;
+    }
+}
+
+@media (min-width: 992px) {
+    .auth-container {
+        min-height: calc(100vh);
+        padding: 100px 0px;
+    }
+
+    .action-buttons {
+        float: right;
+    }
+}
+
+/*************************************/
+/* Hero Styling*/
+/*************************************/
+
+#hero .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: calc(100vh - 100px);
+    z-index: 1;
+}
+
+#hero .content {
+    top: 0;
+    left: 0;
+    min-height: calc(100vh - 100px);
+    color: white;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+/*************************************/
+/* Bootstrap Theme Styling */
+/*************************************/
+
+.btn-primary {
+    background-color: var(--pink) !important;
+    border-color: var(--pink) !important;
+}
+
+    /* Hover */
+    .btn-primary:hover,
+    .btn-primary:focus {
+        background-color: var(--pink-hover) !important;
+        border-color: var(--pink-hover) !important;
+    }
+
+    /* Active / Click */
+    .btn-primary:active,
+    .btn-primary.active,
+    .show > .btn-primary.dropdown-toggle {
+        background-color: var(--pink-active) !important;
+        border-color: var(--pink-active) !important;
+    }
+
+.btn-outline-primary {
+    background-color: white !important;
+    border-color: var(--pink) !important;
+    color: var(--pink) !important;
+}
+
+    /* Hover */
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus {
+        background-color: var(--pink-hover) !important;
+        border-color: var(--pink-hover) !important;
+        color: white !important;
+    }
+
+    /* Active / Click */
+    .btn-outline-primary:active,
+    .btn-outline-primary.active,
+    .show > .btn-primary.dropdown-toggle {
+        background-color: var(--pink-active) !important;
+        border-color: var(--pink-active) !important;
+        color: white;
+    }
+
+p {
+    font-size: 16px;
+    padding: 0px;
+    margin: 0px;
+}
+
+
+.form-control:focus,
+.form-select:focus {
+    border: 1px solid var(--pink);
+    box-shadow: 0 0 0 0.25rem rgba(var(--pink), 0.25) !important;
+}
+
+.form-check-input:checked {
+    background-color: var(--pink);
+    border-color: var(--pink);
+}
+
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.25rem rgba(var(--pink), 0.25) !important;
+}
+
+/********************************/
+/* Event Cards Styling */
+/********************************/
+
+.card-hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+    .card-hover:hover {
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+    }
+
+.card-image-wrapper {
+    height: 200px; /* Fixed container height */
+    overflow: hidden;
+    position: relative;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.card-img-top {
+    width: 100%;
+    height: auto;
+    transition: transform 3s ease-in-out;
+    display: block;
+    position: relative;
+    opacity: 0.9;
+    border-radius: 5px;
+}
+
+.card-hover:hover .card-title {
+    color: var(--pink);
+}
+
+/**************************************************************/
+/* News Marquee Home Page styling */
+/***************************************************************/
+
+.marquee-text:hover {
+    color: var(--pink);
+    cursor: pointer;
+}
+
+/*************************************************************/
+/* Pagination button Styling */
+/*************************************************************/
+/* Make pagination pink themed */
+.pagination .page-link {
+    color: var(--pink);
+    border-color: var(--pink);
+    box-shadow: 0 0 0 0.25rem rgba(var(--pink), 0.25) !important;
+}
+
+    .pagination .page-link:hover {
+        background-color: var(--pink-hover);
+        color: white;
+        border-color: var(--pink-hover);
+        box-shadow: 0 0 0 0.25rem rgba(var(--pink), 0.25) !important;
+    }
+
+/* Active pagination item */
+.pagination .page-item.active .page-link {
+    background-color: var(--pink);
+    border-color: var(--pink);
+    color: white;
+    box-shadow: 0 0 0 0.25rem rgba(var(--pink), 0.25) !important;
+}
+
+.nav-link {
+    color: grey; /* Inactive */
+    background-color: transparent;
+    transition: all 0.3s ease;
+}
+
+    .nav-link:hover {
+        color: var(--pink);
+    }
+
+    .nav-link.active {
+        color: white;
+        background-color: var(--pink);
+    }
+
+    .nav-link:focus {
+        color: var(--pink);
+    }
+
+/******************************/
+/*Gallery Image Card*/
+/******************************/
+.image-card {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.thumbnail-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1s ease-in-out;
+    border-radius: 10px;
+}
+
+.image-card:hover .thumbnail-img {
+    transform: scale(1.2);
+}
+
+.fade {
+    transition: opacity 1s ease; /* 1s */
+}
+
+.overlay-count {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* dark background */
+    color: white;
+    font-size: 48px; /* large text */
+    font-weight: bold;
+}
+
+/*********************************************/
+/* Make the dropdown menu absolute and on top*/
+/*********************************************/
+
+.absolute-dropdown .dropdown-menu {
+    position: absolute !important;
+    top: 100%; /* directly below the toggle button */
+    right: 0; /* align to right edge */
+    left: auto; /* override Bootstrap default */
+    z-index: 1050; /* ensure it�s above other elements */
+}
+
+/********************************************/
+/* Styling the Header Profile */
+/****************************************/
+.dropdown-profile-toggle {
+    white-space: normal !important;
+    align-items: flex-start !important;
+}
+
+    .dropdown-profile-toggle .profile-info {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.1;
+    }
+
+.profile-name {
+    font-weight: 600;
+}
+
+.profile-role {
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.profile-email {
+    font-size: 0.8rem;
+    color: #777;
+}
+
+.dropdown-profile-toggle::after {
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+/**************************************/
+/*    Close Button Boundary Reset     */
+/**************************************/
+
+.btn-close {
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/**************************************/
+
+.offcanvas-body {
+    padding: 0px;
+}
+
+/*************************************/
+/*       Home Page Down Icon         */
+/*************************************/
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateX(-50%) translateY(0);
+    }
+
+    40% {
+        transform: translateX(-50%) translateY(-10px);
+    }
+
+    60% {
+        transform: translateX(-50%) translateY(-5px);
+    }
+}
+
+.background {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1; /* take remaining height */
+    display: flex;
+    justify-content: center; /* horizontal center */
+    align-items: center; /* vertical center */
+}
+
+/****************************/
+/*****  Fixed Table *********/
+/****************************/
+.fixed-table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+    .fixed-table th,
+    .fixed-table td {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+/****Forms****/
+label {
+    font-weight: bold;
+    color: var(--grey);
+}
+
+/*****background****/
+.pattern {
+    background: linear-gradient( 135deg, #fff1f5 0%, #fce4ec 35%, #f8bbd0 70%, #f48fb1 100% );
+}
