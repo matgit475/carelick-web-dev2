@@ -4,22 +4,16 @@
     use Psr\Http\Message\ServerRequestInterface as Request;
     use Psr\Http\Message\ResponseInterface as Response;
     use App\Shared\Controllers\BaseController;
-    use App\Shared\Dto\UpdateSettingsDto;
-    use App\Shared\Dto\UpdatePasswordDto;
-    use App\Shared\Dto\UpdateProfileDto;
     use App\Modules\UserManagement\UserManagementService;
+    use App\Modules\UserManagement\UserSettingsDto;
     
     class UserManagementController extends BaseController{
         private $userService;
-        private $updateSettingsDto;
-        private $updateProfileDto;
-        private $updatePasswordDto;
+        private $userSettingsDto;
 
-        public function __construct(UserManagementService $userService, UpdateSettingsDto $updateSettingsDto, UpdateProfileDto $updateProfileDto, UpdatePasswordDto $updatePasswordDto) {
+        public function __construct(UserManagementService $userService, UserSettingsDto $userSettingsDto) {
             $this->userService = $userService;
-            $this->updateSettingsDto = $updateSettingsDto;
-            $this->updateProfileDto = $updateProfileDto;
-            $this->updatePasswordDto = $updatePasswordDto;
+            $this->userSettingsDto = $userSettingsDto;
         }
 
         public function getUsers(Request $request, Response $response, array $args = []){
@@ -44,32 +38,14 @@
         {
             $id = $args['id'];
             $data = $request->getParsedBody();
-            $dto = $this->updateSettingsDto->fromArray($data);
+            $dto = $this->userSettingsDto->fromArray($data);
             $result = $this->userService->updateSettings($id, $dto);
             return $this->jsonResponse($response, $result);
         }
 
-        public function updateUserPassword(Request $request, Response $response, array $args = []){
-            $id = $args['id'];
-            $data = $request->getParsedBody();
-            $dto = $this->updatePasswordDto->fromArray($data);
-            $result = $this->userService->updatePassword($id, $dto);
+       public function getUnverifiedUsers(Request $request, Response $response, array $args = []){
+            $result = $this->userService->getUnverifiedUsers();
             return $this->jsonResponse($response, $result);
         }
-        /*
-        public function getUserProfile(Request $request, Response $response, array $args = []){
-            $id = $args['id'];
-            $result = $this->userService->getProfile($id);
-            return $this->jsonResponse($response, $result);
-        }
-
-        public function updateUserProfile(Request $request, Response $response, array $args = []){
-            $id = $args['id'];
-            $data = $request->getParsedBody();
-            $dto = $this->updateProfileDto->fromArray($data);
-            $result = $this->userService->updateProfile($id, $dto);
-            return $this->jsonResponse($response, $result); 
-        }
-        */
     }
 ?>

@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Form as BootstrapForm, Button, Nav } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import DangerAlert from "../../../shared/components/alerts/DangerAlert";
-import { login } from "../authApi";
 import { useAuth } from "../AuthProvider";
 
 const validationSchema = Yup.object({
@@ -17,10 +16,8 @@ const validationSchema = Yup.object({
 });
 
 export default function LoginForm() {
-  const { setUser } = useAuth();
-  const navigate = useNavigate();
+  const { handleLogin, error } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = React.useState(null);
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
@@ -32,20 +29,7 @@ export default function LoginForm() {
         password: "",
       }}
       validationSchema={validationSchema}
-      onSubmit={(values, { setSubmitting }) => {
-        setError(null);
-        login(values)
-          .then((response) => {
-            const user = response.data;
-            setUser(user);
-            navigate(`/portal/${user.role}/dashboard`);
-          })
-          .catch((err) => {
-            console.log(err);
-            setError(err.response.data.message);
-          })
-          .finally(() => setSubmitting(false));
-      }}
+      onSubmit={handleLogin}
     >
       {({
         values,
@@ -60,7 +44,9 @@ export default function LoginForm() {
             <DangerAlert message={error} />
             {/* Email */}
             <BootstrapForm.Group className="p-2" controlId="formUsername">
-              <BootstrapForm.Label>User email</BootstrapForm.Label>
+              <BootstrapForm.Label className="fw-bold">
+                User email
+              </BootstrapForm.Label>
 
               <BootstrapForm.Control
                 type="email"
@@ -81,7 +67,9 @@ export default function LoginForm() {
 
             {/* Password */}
             <BootstrapForm.Group className="p-2" controlId="formPassword">
-              <BootstrapForm.Label>Password</BootstrapForm.Label>
+              <BootstrapForm.Label className="fw-bold">
+                Password
+              </BootstrapForm.Label>
 
               <BootstrapForm.Control
                 type={showPassword ? "text" : "password"}

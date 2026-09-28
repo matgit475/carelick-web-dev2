@@ -31,7 +31,12 @@ class AuthRepository extends BaseRepository {
     }
 
     public function saveOtpForUser($userId, $otp) {
-        $sql = "UPDATE users SET activation_code = :otp WHERE id = :userId";
+        $sql = "
+            UPDATE users SET 
+            activation_code = :otp,
+            last_otp = UNIX_TIMESTAMP() 
+            WHERE id = :userId
+        ";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
             ':otp' => $otp,

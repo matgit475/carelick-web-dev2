@@ -4,22 +4,16 @@
     use Psr\Http\Message\ServerRequestInterface as Request;
     use Psr\Http\Message\ResponseInterface as Response;
     use App\Shared\Controllers\BaseController;
-    use App\Shared\Dto\UpdateSettingsDto;
-    use App\Shared\Dto\UpdateProfileDto;
-   use App\Shared\Dto\UpdatePasswordDto;
+    use App\Modules\Account\AccountSettingsDto;
     use App\Modules\Account\AccountService;
 
     class AccountController extends BaseController{
         private $accountService;
-        private $updateSettingsDto;
-        private $updateProfileDto;
-        private $updatePasswordDto;
+        private $accountSettingsDto;
 
-        public function __construct(AccountService $accountService, UpdateSettingsDto $updateSettingsDto, UpdateProfileDto $updateProfileDto,UpdatePasswordDto $updatePasswordDto) {
+        public function __construct(AccountService $accountService, AccountSettingsDto $accountSettingsDto) {
             $this->accountService = $accountService;
-            $this->updateSettingsDto = $updateSettingsDto;
-            $this->updateProfileDto = $updateProfileDto;
-            $this->updatePasswordDto = $updatePasswordDto;
+            $this->accountSettingsDto = $accountSettingsDto;
         }
 
         public function getMyAccount(Request $request, Response $response, array $args = []){
@@ -36,7 +30,7 @@
         public function updateMySettings(Request $request, Response $response, array $args = []){
             $user = $request->getAttribute('user');
             $data = $request->getParsedBody();
-            $dto = $this->updateSettingsDto->fromArray($data);
+            $dto = $this->accountSettingsDto->fromArray($data);
             $result = $this->accountService->updateSettings($user['id'], $dto);
             return $this->jsonResponse($response, $result);
         }

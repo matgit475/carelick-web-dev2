@@ -5,7 +5,7 @@ import { Form as BootstrapForm, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import DangerAlert from "../../../shared/components/alerts/DangerAlert";
 import SuccessAlert from "../../../shared/components/alerts/SuccessAlert";
-import { forgotPassword } from "../authApi";
+import { useAuth } from "../AuthProvider";
 
 // Validation schema
 const validationSchema = Yup.object({
@@ -15,20 +15,7 @@ const validationSchema = Yup.object({
 });
 
 export default function ForgotPassword() {
-  const [error, setError] = React.useState(null);
-  const [success, setSuccess] = React.useState(null);
-
-  const handleSubmit = (values, { setSubmitting }) => {
-    setError(null);
-    forgotPassword(values)
-      .then((response) => {
-        setSuccess(response.data.message);
-      })
-      .catch((err) => {
-        setError(err.response.data.message);
-      })
-      .finally(() => setSubmitting(false));
-  };
+  const { handleForgotPassword, error, success } = useAuth();
 
   return (
     <Formik
@@ -36,7 +23,7 @@ export default function ForgotPassword() {
         email: "",
       }}
       validationSchema={validationSchema}
-      onSubmit={handleSubmit}
+      onSubmit={handleForgotPassword}
     >
       {({
         values,

@@ -1,9 +1,10 @@
 import React from "react";
 import { Formik, Form } from "formik";
+import { useSearchParams } from "react-router-dom";
 import * as Yup from "yup";
 import { Form as BootstrapForm, Button } from "react-bootstrap";
 import DangerAlert from "../../../shared/components/alerts/DangerAlert";
-import { verifyOtp } from "../authApi";
+import { useAuth } from "../AuthProvider";
 
 // Validation schema
 const validationSchema = Yup.object({
@@ -17,27 +18,18 @@ const validationSchema = Yup.object({
 });
 
 export default function VerifyOtpForm() {
-  const [error, setError] = React.useState(null);
-  const handleSubmit = (values, { setSubmitting }) => {
-    setError(null);
-    verifyOtp(values)
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((err) => {
-        setError(err.response.data.message);
-      })
-      .finally(() => setSubmitting(false));
-  };
+  const [searchParams] = useSearchParams();
+  const { handleVerifyOtp, error } = useAuth();
+  const email = searchParams.get("email") || "";
 
   return (
     <Formik
       initialValues={{
-        email: "",
+        email: email,
         otp: "",
       }}
       validationSchema={validationSchema}
-      onSubmit={handleSubmit}
+      onSubmit={handleVerifyOtp}
     >
       {({
         values,

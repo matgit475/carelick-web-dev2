@@ -3,38 +3,38 @@
 
     use App\Shared\Exception\ForbiddenException;
     use App\Modules\UserManagement\UserManagementRepository;
+    use App\Modules\Auth\AuthRepository;
 
     class UserManagementService {
         private $userRepository;
-
-        public function __construct(UserManagementRepository $userRepository) {
+        private $authRepository;
+        
+        public function __construct(UserManagementRepository $userRepository, AuthRepository $authRepository) {
             $this->userRepository = $userRepository;
+            $this->authRepository = $authRepository;
         }
 
         public function getSettings($user_id) {
-            $user = $this->userRepository->find("users", "id", $user_id);
+            $user = $this->userRepository->getUserSettings($user_id);
             return $user;
         }
 
         public function updateSettings($user_id, $dto){
-            $this->userRepository->update("users", "id", $user_id, $dto->toArray());
+           
+            if ($dto->isPasswordSet()){
+                $hashedPassword = password_hash($dto->newPassword, PASSWORD_DEFAULT);
+                $this->authRepository->update("users", "id", $user_id, ["password" => $hashedPassword]);
+            }
 
+            $this->userRepository->update("users", "id", $user_id, $dto->toPersonalDetailsArray());
+            $group_id = $this->userRepository->getGroupIdByName($dto->groupName)["id"];
+            $this->userRepository->update("users_groups", "user_id", $user_id, ["group_id" => $group_id]);
             return [
                 "message" => "The user's settings have been successfully updated!",
                 "user" => $this->userRepository->getUserById($user_id)
             ];
         }
 
-        public function updatePassword($user_id, $dto){
-            if ($dto->newPassword !== $dto->retypePassword) {
-                throw new ForbiddenException("Passwords do not match.");
-            }
-            $hashedPassword = password_hash($dto->newPassword, PASSWORD_DEFAULT);
-            $this->userRepository->update("users", "id", $user_id, ["password" => $hashedPassword]);
-            return [
-                "message" => "The user's password has been successfully updated."
-            ];
-        }
 
         public function getUsers() {
             return $this->userRepository->getAll();
@@ -50,20 +50,8 @@
             ];
         }
 
-        public function getProfile($user_id) {
-            $user = $this->userRepository->findProfile($user_id);
-            return $user;
+        public function getUnverifiedUsers() {
+            return $this->userRepository->getUnverifiedUsers();
         }
-
-        public function updateProfile($user_id, $dto) {
-            $this->userRepository->update("members", "user_id", $user_id, [
-                "surname" => $dto->surname, 
-                "father_name" => $dto->fatherName,
-            ]);
-            return [
-                "message" => "Your profile has been successfully updated!"
-            ];
-        }
-
     }
 ?>

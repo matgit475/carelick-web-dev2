@@ -29,11 +29,7 @@ export default function ProfileMenu() {
           <Dropdown.Item
             onClick={(e) => {
               e.preventDefault();
-              console.log("User in ProfileMenu:", user);
-              if (user?.role === "admin")
-                navigate("/portal/admin/account-settings");
-              else if (user?.role === "members")
-                navigate("/portal/members/account-settings");
+              navigate(`/portal/${user?.role}/account-settings`);
             }}
           >
             <FiSettings size={18} className="me-2" />

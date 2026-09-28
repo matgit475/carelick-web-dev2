@@ -5,8 +5,9 @@ import { Row, Col, Form as BootstrapForm, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import RequiredLabel from "../../../../shared/components/forms/RequiredLabel";
 import TermsAndConditionsModal from "./TermsAndConditionsModal";
-import { register } from "../../authApi";
+import { useAuth } from "../../AuthProvider";
 import DangerAlert from "../../../../shared/components/alerts/DangerAlert";
+import SuccessAlert from "../../../../shared/components/alerts/SuccessAlert";
 
 // Yup validation schema
 const validationSchema = Yup.object({
@@ -37,22 +38,12 @@ const initialValues = {
   termsAccepted: false,
 };
 export default function RegisterForm({ size = "md" }) {
-  const [error, setError] = React.useState(null);
+  const { handleRegister, error, success } = useAuth();
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={(values, { setSubmitting }) => {
-        setError(null);
-        register(values)
-          .then((response) => {
-            console.log("Registration successful:", response.data);
-          })
-          .catch((err) => {
-            setError(err.response.data.message);
-          })
-          .finally(() => setSubmitting(false));
-      }}
+      onSubmit={handleRegister}
       validateOnBlur={true}
       validateOnChange={true}
     >
@@ -85,6 +76,7 @@ export default function RegisterForm({ size = "md" }) {
         return (
           <Form noValidate>
             <DangerAlert message={error} />
+            <SuccessAlert message={success} />
             <Row>
               <Col lg={6}>
                 <BootstrapForm.Group controlId="formFirstName" className="p-2">

@@ -59,7 +59,7 @@
                 'secure' => false,
                 'sameSite' => 'Lax',
                 'path' => '/',
-                'expires' => time() + 3600,
+                //'expires' => time() + 3600,
             ]);
 
             // Step 6: Ideally, generate and store real OTP here
@@ -79,7 +79,9 @@
             if ($user["is_email_verified"]) throw new ConflictException("Email is already verified.");
                 
             // Verify user  with email
-            if ($user && ($otp == $user['activation_code'])) {
+            if ($user && 
+               ($otp == $user['activation_code']) &&
+               (time() - $user['last_otp']) <= 86400 ) {
                 $userId = $user['id'];
                 $role = $this->authRepository->getRoleByUserId($userId);
                 $user = $this->authRepository->find("users", "id", $userId);
@@ -95,12 +97,12 @@
                     'secure' => false,
                     'sameSite' => 'Lax',
                     'path' => '/',
-                    'expires' => time() + 3600,
+                    //'expires' => time() + 3600,
                 ]);
 
                 return ["id"=>$userId, "role"=>$role, "email"=>$email, "first_name"=>$first_name, "account_verified"=>$account_verified];
             } else {
-                throw new UnauthorizedException("Your OTP was incorrect. Please try again.");
+                throw new UnauthorizedException("Your OTP was incorrect or expired. Please try again.");
             }
         }
 
@@ -125,9 +127,9 @@
                         'secure' => false,
                         'sameSite' => 'Lax',
                         'path' => '/',
-                        'expires' => time() + 3600,
+                        //'expires' => time() + 3600,
                     ]);
-                    return ["id"=>$userId, "role"=>$role, "email"=>$email, "first_name"=>$first_name];
+                    return ["id"=>$userId, "role"=>$role, "email"=>$email, "first_name"=>$first_name, "account_verified"=>$account_verified];
                 }
                 else{
                     // Ideally, generate and store real OTP here
@@ -158,13 +160,14 @@
             };
         }
 
-        public function logout(){
+        public function logout()
+        {
             setcookie('token', '', [
-                'expires' => time() - 3600,
                 'path' => '/',
                 'secure' => false,
                 'httponly' => true,
-                'samesite' => 'Lax'
+                'samesite' => 'Lax',
+                'expires' => time() - 3600,
             ]);
             return ['message' => 'Logged out successfully'];
         }
@@ -193,9 +196,9 @@
                 'secure' => false,
                 'sameSite' => 'Lax',
                 'path' => '/',
-                'expires' => time() + 3600,
+                //'expires' => time() + 3600,
             ]);
-            return ["id"=>$user["id"], "role"=>$role, "email"=>$email, "first_name"=>$first_name];
+            return ["id"=>$user["id"], "role"=>$role, "email"=>$email, "first_name"=>$first_name, "account_verified"=>$account_verified];
         }
     }
 ?>

@@ -3,7 +3,7 @@ import { Form } from "react-bootstrap";
 
 const RequiredLabel = ({ children }) => {
   return (
-    <Form.Label>
+    <Form.Label className="fw-bold">
       {children} <span className="text-danger">*</span>
     </Form.Label>
   );

@@ -14,6 +14,7 @@ use App\Modules\UserManagement\UserManagementRoutes;
 use App\Modules\Account\AccountRoutes;
 use App\Modules\Profession\ProfessionRoutes;
 use App\Modules\Image\ImageRoutes;
+use App\Modules\Verification\VerificationRoutes;
 use App\Shared\Mail;
 use App\Database;
 
@@ -57,20 +58,22 @@ $app
         bool $logErrors,
         bool $logErrorDetails
     ) use ($app) {
-        if ($exception instanceof DI\DependencyException) throw $exception;
-        if (!$exception instanceof Exception) throw $exception;
-        $status = $exception->getCode();
-        $response = $app->getResponseFactory()->createResponse($status);
-        $response->getBody()->write(json_encode([
-            "success" => false,
-            "message" => $exception->getMessage(),
-            "status" => $status
-        ]));
-        return $response->withHeader("Content-Type", "application/json");
+        if ($exception instanceof RuntimeException) {
+            $status = $exception->getCode();
+            $response = $app->getResponseFactory()->createResponse($status);
+            $response->getBody()->write(json_encode([
+                "success" => false,
+                "message" => $exception->getMessage(),
+                "status" => $status
+            ]));
+            return $response->withHeader("Content-Type", "application/json");
+        }
+        throw $exception;
     }
 );
 $app->addBodyParsingMiddleware();
 $app->add(CorsMiddleware::class);
+
 // Routes
 AuthRoutes::map($app);
 NewsRoutes::map($app);
@@ -79,6 +82,7 @@ AccountRoutes::map($app);
 UserManagementRoutes::map($app);
 ProfessionRoutes::map($app);
 ImageRoutes::map($app);
+VerificationRoutes::map($app);
 
 $app->run();
 

@@ -4,7 +4,8 @@ namespace App\Shared\Security;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use Exception;
+use App\Shared\Exception\UnauthorizedException;
+use Throwable;
 
 class JwtService
 {
@@ -17,7 +18,7 @@ class JwtService
     public function encode($userId, $role, $email, $first_name, $account_verified) {
         $payload = [
             "iat" => time(),            // Issued at
-            "exp" => time() + 3600,     // Expiry (1 hour)
+            //"exp" => time() + 3600,     // Expiry (1 hour)
             "sub" => $userId,           // User ID
             "role" => $role,
             "email"=> $email,
@@ -28,6 +29,10 @@ class JwtService
     }
 
     public function decode($token) {
-        return JWT::decode($token, new Key($this->secret, 'HS256'));
+        try {
+           return JWT::decode($token, new Key($this->secret, 'HS256'));
+        } catch (Throwable $e) {
+            throw new UnauthorizedException('Invalid or expired token');
+        }
     }
 }

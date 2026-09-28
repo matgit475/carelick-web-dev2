@@ -23,7 +23,12 @@
         }
 
         public function updateSettings($user_id, $dto){
-            $this->authRepository->update("users", "id", $user_id, $dto->toArray());
+            if ($dto->isPasswordSet()){
+                $hashedPassword = password_hash($dto->newPassword, PASSWORD_DEFAULT);
+                $this->authRepository->update("users", "id", $user_id, ["password" => $hashedPassword]);
+            }
+
+            $this->authRepository->update("users", "id", $user_id, $dto->toPersonalDetailsArray());
             $role = $this->authRepository->getRoleByUserId($user_id);
             $user = $this->authRepository->find("users", "id", $user_id);
             $email = $user["email"];
@@ -40,18 +45,7 @@
                   
             return [
                 "message" => "Your account settings have been successfully updated!",
-                "user" => ["id"=>$user_id, "role"=>$role, "email"=>$email, "first_name"=>$first_name]
-            ];
-        }
-
-        public function updateMyPassword($user_id, $dto){
-            if ($dto->newPassword !== $dto->retypePassword) {
-                throw new ForbiddenException("Passwords do not match.");
-            }
-            $hashedPassword = password_hash($dto->newPassword, PASSWORD_DEFAULT);
-            $this->authRepository->update("users", "id", $user_id, ["password" => $hashedPassword]);
-            return [
-                "message" => "Your account password has been successfully updated."
+                "user" => ["id"=>$user_id, "role"=>$role, "email"=>$email, "first_name"=>$first_name, "account_verified"=> $account_verified]
             ];
         }
 

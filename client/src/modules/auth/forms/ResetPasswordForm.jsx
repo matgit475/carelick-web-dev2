@@ -3,8 +3,8 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Form as BootstrapForm, Button } from "react-bootstrap";
 import { Link, useSearchParams } from "react-router-dom";
-import { resetPassword } from "../authApi";
 import DangerAlert from "../../../shared/components/alerts/DangerAlert";
+import { useAuth } from "../AuthProvider";
 
 // Validation schema
 const validationSchema = Yup.object({
@@ -21,36 +21,18 @@ const validationSchema = Yup.object({
 });
 
 export default function ResetPassword() {
-  const [error, setError] = React.useState(null);
+  const { handleResetPassword, error } = useAuth();
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token") || "";
-
-  const handleSubmit = (values, { setSubmitting }) => {
-    const payload = {
-      token,
-      newPassword: values.newPassword,
-      retypePassword: values.retypePassword,
-    };
-    resetPassword(payload)
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((err) => {
-        setError(err.response.data.message);
-      })
-      .finally(() => {
-        setSubmitting(false);
-      });
-  };
-
   return (
     <Formik
       initialValues={{
+        token: token,
         newPassword: "",
         retypePassword: "",
       }}
       validationSchema={validationSchema}
-      onSubmit={handleSubmit}
+      onSubmit={handleResetPassword}
     >
       {({
         values,
@@ -62,7 +44,7 @@ export default function ResetPassword() {
       }) => (
         <Form noValidate>
           {/* Hidden reset token */}
-          <input type="hidden" name="token" value={token} />
+          <input type="hidden" name="token" value={values.token} />
           <DangerAlert message={error} />
           {/* New Password */}
           <BootstrapForm.Group controlId="formNewPassword" className="mb-3">

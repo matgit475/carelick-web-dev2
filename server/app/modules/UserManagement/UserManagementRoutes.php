@@ -4,20 +4,25 @@ use Slim\App;
 use App\Modules\UserManagement\UserManagementController;
 use App\Shared\Middleware\JwtMiddleware;
 use App\Shared\Middleware\AdminMiddleware;
+use App\Shared\Middleware\MultiRoleMiddleware;
 
 class UserManagementRoutes
 {
     public static function map(App $app){
         $app->group('/users', function ($group) {
-            $group->get('', [ UserManagementController::class, 'getUsers' ]);
             $group->delete('/{id}', [ UserManagementController::class, 'deleteUser' ]);
-            $group->get('/settings/{id}', [ UserManagementController::class, 'getUserSettings' ]);
             $group->post('/settings/{id}', [ UserManagementController::class, 'updateUserSettings']);
             $group->post('/update_password/{id}', [UserManagementController::class, 'updateUserPassword']);
-            $group->get('/profile/{id}', [UserManagementController::class, 'getUserProfile']);
-            $group->post('/profile/{id}', [UserManagementController::class, 'updateUserProfile']);
+            $group->get('/unverified', [UserManagementController::class, 'getUnverifiedUsers']);
         })
         ->add(AdminMiddleware::class)
+        ->add(JwtMiddleware::class);
+
+        $app->group('/users', function ($group) {
+            $group->get('', [ UserManagementController::class, 'getUsers' ]);
+            $group->get('/settings/{id}', [ UserManagementController::class, 'getUserSettings' ]);
+        })
+        ->add(new MultiRoleMiddleware([ 'admin', 'subadmin']))
         ->add(JwtMiddleware::class);
     }
 }
