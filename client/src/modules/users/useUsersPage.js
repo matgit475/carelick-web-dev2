@@ -370,11 +370,10 @@ export const useUsersPage = () => {
   };
 
   const handleEmailSelected = () => {
-    const selectedEmails = (filteredRows || [])
+    const selectedEmails = (result || [])
       .filter((user) => selectedUsers[user.id])
       .map((user) => user.email)
       .filter(Boolean);
-
     if (selectedEmails.length === 0) {
       return;
     }
